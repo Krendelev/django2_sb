@@ -1,22 +1,23 @@
 import json
 
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.templatetags.static import static
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 from .models import Banner, Product, Order, OrderItem
 
 
+@api_view(["GET"])
 def banners_list_api(request):
     banners = [
         {"title": obj.title, "src": obj.image.url, "text": obj.tagline}
         for obj in Banner.objects.all()
     ]
-    return JsonResponse(
-        banners, safe=False, json_dumps_params={"ensure_ascii": False, "indent": 4}
-    )
+    return Response(banners)
 
 
+@api_view(["GET"])
 def product_list_api(request):
     products = Product.objects.select_related("category").available()
 
@@ -39,32 +40,22 @@ def product_list_api(request):
             },
         }
         dumped_products.append(dumped_product)
-    return JsonResponse(
-        dumped_products,
-        safe=False,
-        json_dumps_params={
-            "ensure_ascii": False,
-            "indent": 4,
-        },
-    )
+
+    return Response(dumped_products)
 
 
+@api_view(["POST"])
 def register_order(request):
-    try:
-        order_serialized = json.loads(request.body.decode())
-    except ValueError:
-        return HttpResponseBadRequest
-
     order = Order.objects.create(
-        first_name=order_serialized["firstname"],
-        last_name=order_serialized["lastname"],
-        address=order_serialized["address"],
-        customer_phone=order_serialized["phonenumber"],
+        first_name=request.data["firstname"],
+        last_name=request.data["lastname"],
+        address=request.data["address"],
+        customer_phone=request.data["phonenumber"],
     )
-    for item in order_serialized["products"]:
+    for item in request.data["products"]:
         OrderItem.objects.get_or_create(
             order=order,
             product=Product.objects.get(pk=item["product"]),
             quantity=item["quantity"],
         )
-    return JsonResponse({})
+    return Response({}, content_type="application/json")

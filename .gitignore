@@ -1,5 +1,6 @@
 .vscode/
 .gitignore
+test_*.json
 
 bundles/**
 node_modules/
