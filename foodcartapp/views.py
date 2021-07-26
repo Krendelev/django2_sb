@@ -1,6 +1,4 @@
-import json
-
-from django.http import HttpResponseBadRequest, JsonResponse
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -44,8 +42,25 @@ def product_list_api(request):
     return Response(dumped_products)
 
 
+def validate_data(data):
+    if not all(value for value in data.values()):
+        return {"error": "fields cannot be empty"}
+    try:
+        products = data["products"]
+    except KeyError:
+        return {"error": "'products' not found in request"}
+
+    if not isinstance(products, list):
+        return {"error": "'products' is not list"}
+
+    return None
+
+
 @api_view(["POST"])
 def register_order(request):
+    if err := validate_data(request.data):
+        return Response(err, status=status.HTTP_400_BAD_REQUEST)
+
     order = Order.objects.create(
         first_name=request.data["firstname"],
         last_name=request.data["lastname"],
@@ -58,4 +73,4 @@ def register_order(request):
             product=Product.objects.get(pk=item["product"]),
             quantity=item["quantity"],
         )
-    return Response({}, content_type="application/json")
+    return Response({}, status=status.HTTP_201_CREATED)
