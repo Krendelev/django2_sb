@@ -1,12 +1,11 @@
+from django.db import transaction
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 
-from .models import Banner, Product, Order, OrderItem
+from .models import Banner, Product
 from .serializers import OrderSerializer
-
-from pprint import pprint
 
 
 @api_view(["GET"])
@@ -46,6 +45,7 @@ def product_list_api(request):
 
 
 @api_view(["POST"])
+@transaction.atomic
 def register_order(request):
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
