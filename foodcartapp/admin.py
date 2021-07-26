@@ -123,20 +123,20 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     search_fields = [
-        "last_name",
+        "lastname",
         "address",
-        "phone",
+        "phonenumber",
     ]
     list_display = [
         "get_customer",
         "address",
-        "customer_phone",
+        "phonenumber",
     ]
     inlines = [OrderItemInline]
 
     @admin.display(description="Клиент")
     def get_customer(self, obj):
-        return f"{obj.last_name} {obj.first_name}"
+        return f"{obj.lastname} {obj.firstname}"
 
 
 @admin.register(Banner)

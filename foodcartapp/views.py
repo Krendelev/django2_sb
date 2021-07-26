@@ -4,6 +4,9 @@ from rest_framework.response import Response
 
 
 from .models import Banner, Product, Order, OrderItem
+from .serializers import OrderSerializer
+
+from pprint import pprint
 
 
 @api_view(["GET"])
@@ -42,35 +45,10 @@ def product_list_api(request):
     return Response(dumped_products)
 
 
-def validate_data(data):
-    if not all(value for value in data.values()):
-        return {"error": "fields cannot be empty"}
-    try:
-        products = data["products"]
-    except KeyError:
-        return {"error": "'products' not found in request"}
-
-    if not isinstance(products, list):
-        return {"error": "'products' is not list"}
-
-    return None
-
-
 @api_view(["POST"])
 def register_order(request):
-    if err := validate_data(request.data):
-        return Response(err, status=status.HTTP_400_BAD_REQUEST)
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
 
-    order = Order.objects.create(
-        first_name=request.data["firstname"],
-        last_name=request.data["lastname"],
-        address=request.data["address"],
-        customer_phone=request.data["phonenumber"],
-    )
-    for item in request.data["products"]:
-        OrderItem.objects.get_or_create(
-            order=order,
-            product=Product.objects.get(pk=item["product"]),
-            quantity=item["quantity"],
-        )
     return Response({}, status=status.HTTP_201_CREATED)

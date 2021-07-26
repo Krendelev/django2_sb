@@ -104,9 +104,9 @@ class RestaurantMenuItem(models.Model):
 
 class Order(models.Model):
     address = models.CharField("адрес", max_length=100)
-    first_name = models.CharField("имя", max_length=20)
-    last_name = models.CharField("фамилия", max_length=20)
-    customer_phone = PhoneNumberField("телефон")
+    firstname = models.CharField("имя", max_length=20)
+    lastname = models.CharField("фамилия", max_length=20)
+    phonenumber = PhoneNumberField("телефон")
 
     class Meta:
         ordering = ["-pk"]
@@ -114,7 +114,7 @@ class Order(models.Model):
         verbose_name_plural = "заказы"
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.address}"
+        return f"{self.firstname} {self.lastname} - {self.address}"
 
 
 def get_sentinel_product():
@@ -124,7 +124,7 @@ def get_sentinel_product():
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order,
-        related_name="order_items",
+        related_name="products",
         verbose_name="позиция заказа",
         on_delete=models.CASCADE,
     )
