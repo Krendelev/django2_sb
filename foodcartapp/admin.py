@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.shortcuts import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
 
@@ -137,6 +138,13 @@ class OrderAdmin(admin.ModelAdmin):
     @admin.display(description="Клиент")
     def get_customer(self, obj):
         return f"{obj.lastname} {obj.firstname}"
+
+    def response_post_save_change(self, request, obj):
+        res = super().response_post_save_change(request, obj)
+        if "back" in request.GET:
+            return redirect("restaurateur:view_orders")
+        else:
+            return res
 
 
 @admin.register(Banner)
