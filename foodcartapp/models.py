@@ -111,6 +111,7 @@ class OrderQuerySet(models.QuerySet):
 
 
 class Order(models.Model):
+    STATUS_CHOICES = [("")]
     address = models.CharField("адрес", max_length=100)
     firstname = models.CharField("имя", max_length=20)
     lastname = models.CharField("фамилия", max_length=20)

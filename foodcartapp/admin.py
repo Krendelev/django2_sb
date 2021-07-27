@@ -1,8 +1,9 @@
 from django.contrib import admin
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
+from django.utils.http import url_has_allowed_host_and_scheme
+from star_burger.settings import ALLOWED_HOSTS
 
 from .models import (
     Banner,
@@ -140,11 +141,17 @@ class OrderAdmin(admin.ModelAdmin):
         return f"{obj.lastname} {obj.firstname}"
 
     def response_post_save_change(self, request, obj):
-        res = super().response_post_save_change(request, obj)
-        if "back" in request.GET:
-            return redirect("restaurateur:view_orders")
+        fallback = super().response_post_save_change(request, obj)
+        redirect_to = request.GET.get("next")
+        url_is_safe = url_has_allowed_host_and_scheme(
+            redirect_to,
+            ALLOWED_HOSTS,
+            require_https=request.is_secure(),
+        )
+        if redirect_to and url_is_safe:
+            return redirect(redirect_to)
         else:
-            return res
+            return fallback
 
 
 @admin.register(Banner)
