@@ -134,6 +134,19 @@ class OrderAdmin(admin.ModelAdmin):
         "address",
         "phonenumber",
     ]
+    fields = [
+        "firstname",
+        "lastname",
+        "phonenumber",
+        "address",
+        "payment",
+        "status",
+        "received",
+        "confirmed",
+        "delivered",
+        "comment",
+    ]
+    readonly_fields = ["received"]
     inlines = [OrderItemInline]
 
     @admin.display(description="Клиент")

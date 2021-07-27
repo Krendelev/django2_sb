@@ -119,8 +119,10 @@ class Order(models.Model):
         ("Cancelled", "Отменён"),
         ("Completed", "Выполнен"),
     ]
-    address = models.CharField("адрес", max_length=100)
+    PAYMENT_CHOICES = [("Card", "Картой"), ("Cash", "Наличными")]
+
     firstname = models.CharField("имя", max_length=20)
+    address = models.CharField("адрес", max_length=100)
     lastname = models.CharField("фамилия", max_length=20)
     phonenumber = PhoneNumberField("телефон")
     received = models.DateTimeField("принят", default=timezone.now)
@@ -128,6 +130,9 @@ class Order(models.Model):
     delivered = models.DateTimeField("доставлен", blank=True, null=True)
     status = models.CharField(
         "статус", max_length=10, choices=STATUS_CHOICES, default="New"
+    )
+    payment = models.CharField(
+        "способ оплаты", blank=True, max_length=10, choices=PAYMENT_CHOICES
     )
     comment = models.TextField("комментарий", blank=True)
 
