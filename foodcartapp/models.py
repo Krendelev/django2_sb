@@ -123,6 +123,7 @@ class Order(models.Model):
     lastname = models.CharField("фамилия", max_length=20)
     phonenumber = PhoneNumberField("телефон")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="New")
+    comment = models.TextField(blank=True)
 
     objects = OrderQuerySet.as_manager()
 
