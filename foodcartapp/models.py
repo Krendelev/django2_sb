@@ -26,14 +26,6 @@ class Restaurant(models.Model):
         return self.name
 
 
-class ProductQuerySet(models.QuerySet):
-    def available(self):
-        products = RestaurantMenuItem.objects.filter(availability=True).values_list(
-            "product"
-        )
-        return self.filter(pk__in=products)
-
-
 class ProductCategory(models.Model):
     name = models.CharField("название", max_length=50)
 
@@ -43,6 +35,14 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProductQuerySet(models.QuerySet):
+    def available(self):
+        products = RestaurantMenuItem.objects.filter(availability=True).values_list(
+            "product"
+        )
+        return self.filter(pk__in=products)
 
 
 class Product(models.Model):
@@ -105,9 +105,9 @@ class RestaurantMenuItem(models.Model):
 
 
 class OrderQuerySet(models.QuerySet):
-    def price(self):
+    def with_price(self):
         return self.annotate(
-            price=Sum(F("products__quantity") * F("products__product__price"))
+            price=Sum(F("order_items__quantity") * F("order_items__product__price"))
         )
 
 
@@ -135,6 +135,14 @@ class Order(models.Model):
         "способ оплаты", blank=True, max_length=10, choices=PAYMENT_CHOICES
     )
     comment = models.TextField("комментарий", blank=True)
+    restaurant = models.ForeignKey(
+        Restaurant,
+        blank=True,
+        null=True,
+        related_name="orders",
+        verbose_name="ресторан",
+        on_delete=models.SET_NULL,
+    )
 
     objects = OrderQuerySet.as_manager()
 
@@ -154,7 +162,7 @@ def get_sentinel_product():
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order,
-        related_name="products",
+        related_name="order_items",
         verbose_name="позиция заказа",
         on_delete=models.CASCADE,
     )
@@ -167,7 +175,10 @@ class OrderItem(models.Model):
     )
     quantity = models.PositiveSmallIntegerField()
     price = models.DecimalField(
-        "стоимость", max_digits=8, decimal_places=2, validators=[MinValueValidator(0)]
+        "стоимость",
+        max_digits=8,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
     )
 
     class Meta:

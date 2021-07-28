@@ -124,16 +124,6 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    search_fields = [
-        "lastname",
-        "address",
-        "phonenumber",
-    ]
-    list_display = [
-        "get_customer",
-        "address",
-        "phonenumber",
-    ]
     fields = [
         "firstname",
         "lastname",
@@ -145,6 +135,17 @@ class OrderAdmin(admin.ModelAdmin):
         "confirmed",
         "delivered",
         "comment",
+        "restaurant",
+    ]
+    search_fields = [
+        "lastname",
+        "address",
+        "phonenumber",
+    ]
+    list_display = [
+        "get_customer",
+        "address",
+        "phonenumber",
     ]
     readonly_fields = ["received"]
     inlines = [OrderItemInline]

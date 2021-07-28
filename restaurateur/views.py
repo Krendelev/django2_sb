@@ -1,14 +1,13 @@
-from django import forms
-from django.shortcuts import redirect, render
-from django.views import View
-from django.urls import reverse_lazy
-from django.contrib.auth.decorators import user_passes_test
+from collections import defaultdict
 
+from django import forms
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
-
-
-from foodcartapp.models import Product, Restaurant, Order
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views import View
+from foodcartapp.models import Order, OrderItem, Product, Restaurant, RestaurantMenuItem
 
 
 class Login(forms.Form):
@@ -110,8 +109,28 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url="restaurateur:login")
 def view_orders(request):
+    orders = (
+        Order.objects.all()
+        .with_price()
+        .prefetch_related("order_items", "order_items__product")
+    )
+    menu_items = RestaurantMenuItem.objects.filter(availability=True).select_related(
+        "restaurant", "product"
+    )
+
+    products_in_restaurants = defaultdict(list)
+    for item in menu_items:
+        products_in_restaurants[item.product].append(item.restaurant)
+
+    for order in orders:
+        restaurants = [
+            set(products_in_restaurants[item.product])
+            for item in order.order_items.all()
+        ]
+        order.available_in = set.intersection(*restaurants)
+
     return render(
         request,
         template_name="order_items.html",
-        context={"order_items": Order.objects.all().price()},
+        context={"orders": orders},
     )
