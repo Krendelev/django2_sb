@@ -1,13 +1,10 @@
-import requests
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Sum
 from django.utils import timezone
-from environs import Env
 from phonenumber_field.modelfields import PhoneNumberField
 
-env = Env()
-env.read_env()
+from locationapp.models import Location
 
 
 class Restaurant(models.Model):
@@ -29,6 +26,10 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        Location.objects.get_or_create(address=self.address)
+        super().save(*args, **kwargs)
 
 
 class ProductCategory(models.Model):
@@ -159,17 +160,9 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.firstname} {self.lastname} - {self.address}"
 
-    @staticmethod
-    def fetch_coordinates(place):
-        base_url = "https://geocode-maps.yandex.ru/1.x"
-        params = {"geocode": place, "apikey": env("GEOCODER_API_KEY"), "format": "json"}
-        response = requests.get(base_url, params=params)
-        response.raise_for_status()
-        found_places = response.json()["response"]["GeoObjectCollection"][
-            "featureMember"
-        ]
-        lon, lat = found_places[0]["GeoObject"]["Point"]["pos"].split(" ")
-        return lat, lon
+    def save(self, *args, **kwargs):
+        Location.objects.get_or_create(address=self.address)
+        super().save(*args, **kwargs)
 
 
 def get_sentinel_product():

@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # local
     "foodcartapp.apps.FoodcartappConfig",
+    "locationapp.apps.LocationappConfig",
     "restaurateur.apps.RestaurateurConfig",
 ]
 

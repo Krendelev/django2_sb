@@ -1,3 +1,4 @@
+from ast import literal_eval
 from collections import defaultdict
 from operator import itemgetter
 
@@ -9,6 +10,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from foodcartapp.models import Order, Product, Restaurant, RestaurantMenuItem
+from locationapp.models import Location
 from geopy import distance
 
 
@@ -119,6 +121,7 @@ def view_orders(request):
     menu_items = RestaurantMenuItem.objects.filter(availability=True).select_related(
         "restaurant", "product"
     )
+    coordinates = Location.objects.values_list("coordinates", flat=True)
 
     products_in_restaurants = defaultdict(list)
     for item in menu_items:
@@ -129,13 +132,14 @@ def view_orders(request):
             set(products_in_restaurants[item.product])
             for item in order.order_items.all()
         ]
+        
         restaurants_with_distance = []
-        customer_location = Order.fetch_coordinates(order.address)
+        customer_coord = coordinates.get(address=order.address)
 
         for restaurant in set.intersection(*restaurants):
+            restaurant_coord = coordinates.get(address=restaurant.address)
             dist = distance.distance(
-                Order.fetch_coordinates(restaurant.address),
-                customer_location,
+                literal_eval(restaurant_coord), literal_eval(customer_coord)
             ).km
             restaurants_with_distance.append((restaurant.name, round(dist, 3)))
 

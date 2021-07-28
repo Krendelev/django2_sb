@@ -3,9 +3,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
 from .models import Banner, Product
 from .serializers import OrderSerializer
+from locationapp.models import Location
 
 
 @api_view(["GET"])
