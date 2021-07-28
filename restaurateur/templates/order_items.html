@@ -21,7 +21,7 @@
       <th>Телефон</th>
       <th>Адрес доставки</th>
       <th>Комментарий</th>
-      <th>Наличие</th>
+      <th>Рестораны</th>
       <th>Редактирование</th>
     </tr>
 
@@ -37,10 +37,10 @@
         <td>{{ order.comment }}</td>
         <td>
           <details>
-            <summary>Рестораны</summary>
+            <summary>Развернуть</summary>
               <ul>
                 {% for restaurant in order.available_in %}
-                  <li>{{ restaurant.name }}</li>
+                  <li>{{ restaurant.0 }} – {{ restaurant.1 }} км</li>
                 {% endfor %}
               </ul>
           </details>

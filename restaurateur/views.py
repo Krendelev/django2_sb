@@ -1,4 +1,5 @@
 from collections import defaultdict
+from operator import itemgetter
 
 from django import forms
 from django.contrib.auth import authenticate, login
@@ -7,7 +8,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-from foodcartapp.models import Order, OrderItem, Product, Restaurant, RestaurantMenuItem
+from foodcartapp.models import Order, Product, Restaurant, RestaurantMenuItem
+from geopy import distance
 
 
 class Login(forms.Form):
@@ -127,10 +129,16 @@ def view_orders(request):
             set(products_in_restaurants[item.product])
             for item in order.order_items.all()
         ]
-        order.available_in = set.intersection(*restaurants)
+        restaurants_with_distance = []
+        customer_location = Order.fetch_coordinates(order.address)
 
-    return render(
-        request,
-        template_name="order_items.html",
-        context={"orders": orders},
-    )
+        for restaurant in set.intersection(*restaurants):
+            dist = distance.distance(
+                Order.fetch_coordinates(restaurant.address),
+                customer_location,
+            ).km
+            restaurants_with_distance.append((restaurant.name, round(dist, 3)))
+
+        order.available_in = sorted(restaurants_with_distance, key=itemgetter(1))
+
+    return render(request, template_name="order_items.html", context={"orders": orders})

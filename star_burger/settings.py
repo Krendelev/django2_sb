@@ -25,10 +25,10 @@ INSTALLED_APPS = [
     # 3rd party
     "debug_toolbar",
     "phonenumber_field",
+    "rest_framework",
     # local
     "foodcartapp.apps.FoodcartappConfig",
     "restaurateur.apps.RestaurateurConfig",
-    "rest_framework",
 ]
 
 MIDDLEWARE = [
