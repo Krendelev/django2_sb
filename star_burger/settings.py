@@ -125,3 +125,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
     os.path.join(BASE_DIR, "bundles"),
 ]
+
+GEOCODER_API_KEY = env("GEOCODER_API_KEY", "get_your_own_API_key")

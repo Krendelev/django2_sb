@@ -1,14 +1,11 @@
 from django.db import models
 from django.utils import timezone
-from environs import Env
 from geopy.geocoders import Yandex
-
-env = Env()
-env.read_env()
+from star_burger.settings import GEOCODER_API_KEY
 
 
 def get_coordinates(address):
-    coder = Yandex(env("GEOCODER_API_KEY"))
+    coder = Yandex(GEOCODER_API_KEY)
     _, coordinates = coder.geocode(address, exactly_one=True)
     return str(coordinates)
 
