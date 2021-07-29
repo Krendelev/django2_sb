@@ -183,7 +183,7 @@ class OrderItem(models.Model):
         verbose_name="продукт",
         on_delete=models.SET(get_sentinel_product),
     )
-    quantity = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField("количество")
     price = models.DecimalField(
         "стоимость",
         max_digits=8,
