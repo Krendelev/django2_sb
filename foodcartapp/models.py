@@ -176,7 +176,6 @@ class OrderItem(models.Model):
     )
     product = models.ForeignKey(
         Product,
-        blank=True,
         related_name="order_items",
         verbose_name="продукт",
         on_delete=models.PROTECT,

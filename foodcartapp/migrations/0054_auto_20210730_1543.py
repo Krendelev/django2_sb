@@ -9,48 +9,82 @@ import phonenumber_field.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('foodcartapp', '0053_alter_orderitem_quantity'),
+        ("foodcartapp", "0053_alter_orderitem_quantity"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='confirmed',
-            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='подтверждён'),
+            model_name="order",
+            name="confirmed",
+            field=models.DateTimeField(
+                blank=True, db_index=True, null=True, verbose_name="подтверждён"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='delivered',
-            field=models.DateTimeField(blank=True, db_index=True, null=True, verbose_name='доставлен'),
+            model_name="order",
+            name="delivered",
+            field=models.DateTimeField(
+                blank=True, db_index=True, null=True, verbose_name="доставлен"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='payment',
-            field=models.CharField(blank=True, choices=[('Card', 'Картой'), ('Cash', 'Наличными')], db_index=True, max_length=10, verbose_name='способ оплаты'),
+            model_name="order",
+            name="payment",
+            field=models.CharField(
+                blank=True,
+                choices=[("Card", "Картой"), ("Cash", "Наличными")],
+                db_index=True,
+                max_length=10,
+                verbose_name="способ оплаты",
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='phonenumber',
-            field=phonenumber_field.modelfields.PhoneNumberField(db_index=True, max_length=128, region=None, verbose_name='телефон'),
+            model_name="order",
+            name="phonenumber",
+            field=phonenumber_field.modelfields.PhoneNumberField(
+                db_index=True, max_length=128, region=None, verbose_name="телефон"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='received',
-            field=models.DateTimeField(db_index=True, default=django.utils.timezone.now, verbose_name='принят'),
+            model_name="order",
+            name="received",
+            field=models.DateTimeField(
+                db_index=True, default=django.utils.timezone.now, verbose_name="принят"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='status',
-            field=models.CharField(choices=[('New', 'Новый'), ('Processing', 'В работе'), ('Delivered', 'Доставка'), ('Cancelled', 'Отменён'), ('Completed', 'Выполнен')], db_index=True, default='New', max_length=10, verbose_name='статус'),
+            model_name="order",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("New", "Новый"),
+                    ("Processing", "В работе"),
+                    ("Delivered", "Доставка"),
+                    ("Cancelled", "Отменён"),
+                    ("Completed", "Выполнен"),
+                ],
+                db_index=True,
+                default="New",
+                max_length=10,
+                verbose_name="статус",
+            ),
         ),
         migrations.AlterField(
-            model_name='orderitem',
-            name='product',
-            field=models.ForeignKey(blank=True, on_delete=models.SET(foodcartapp.models.get_sentinel_product), related_name='order_items', to='foodcartapp.product', verbose_name='продукт'),
+            model_name="orderitem",
+            name="product",
+            field=models.ForeignKey(
+                blank=True,
+                on_delete=models.PROTECT,
+                related_name="order_items",
+                to="foodcartapp.product",
+                verbose_name="продукт",
+            ),
         ),
         migrations.AlterField(
-            model_name='restaurant',
-            name='name',
-            field=models.CharField(db_index=True, max_length=50, verbose_name='название'),
+            model_name="restaurant",
+            name="name",
+            field=models.CharField(
+                db_index=True, max_length=50, verbose_name="название"
+            ),
         ),
     ]
