@@ -8,7 +8,7 @@ from locationapp.models import Location
 
 
 class Restaurant(models.Model):
-    name = models.CharField("название", max_length=50)
+    name = models.CharField("название", max_length=50, db_index=True)
     address = models.CharField(
         "адрес",
         max_length=100,
@@ -130,15 +130,21 @@ class Order(models.Model):
     firstname = models.CharField("имя", max_length=20)
     address = models.CharField("адрес", max_length=100)
     lastname = models.CharField("фамилия", max_length=20)
-    phonenumber = PhoneNumberField("телефон")
-    received = models.DateTimeField("принят", default=timezone.now)
-    confirmed = models.DateTimeField("подтверждён", blank=True, null=True)
-    delivered = models.DateTimeField("доставлен", blank=True, null=True)
+    phonenumber = PhoneNumberField("телефон", db_index=True)
+    received = models.DateTimeField("принят", default=timezone.now, db_index=True)
+    confirmed = models.DateTimeField(
+        "подтверждён", blank=True, null=True, db_index=True
+    )
+    delivered = models.DateTimeField("доставлен", blank=True, null=True, db_index=True)
     status = models.CharField(
-        "статус", max_length=10, choices=STATUS_CHOICES, default="New"
+        "статус", max_length=10, choices=STATUS_CHOICES, default="New", db_index=True
     )
     payment = models.CharField(
-        "способ оплаты", blank=True, max_length=10, choices=PAYMENT_CHOICES
+        "способ оплаты",
+        blank=True,
+        max_length=10,
+        choices=PAYMENT_CHOICES,
+        db_index=True,
     )
     comment = models.TextField("комментарий", blank=True)
     restaurant = models.ForeignKey(
