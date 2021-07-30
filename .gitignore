@@ -1,6 +1,7 @@
 .vscode/
 .gitignore
 test_*
+.DS_Store
 
 bundles/**
 node_modules/
