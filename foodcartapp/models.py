@@ -167,10 +167,6 @@ class Order(models.Model):
         return f"{self.firstname} {self.lastname} - {self.address}"
 
 
-def get_sentinel_product():
-    return Product.objects.get_or_create(name="deleted")[0]
-
-
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order,
@@ -183,7 +179,7 @@ class OrderItem(models.Model):
         blank=True,
         related_name="order_items",
         verbose_name="продукт",
-        on_delete=models.SET(get_sentinel_product),
+        on_delete=models.PROTECT,
     )
     quantity = models.PositiveSmallIntegerField(
         "количество", validators=[MinValueValidator(1)]
