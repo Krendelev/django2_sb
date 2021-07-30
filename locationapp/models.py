@@ -12,6 +12,7 @@ class Location(models.Model):
     class Meta:
         verbose_name = "место"
         verbose_name_plural = "места"
+        unique_together = ["address", "coordinates"]
 
     def __str__(self):
         return f"{self.address}"
@@ -20,7 +21,3 @@ class Location(models.Model):
         coder = Yandex(GEOCODER_API_KEY)
         location = coder.geocode(address, exactly_one=True)
         return f"{location.point}"
-
-    # def save(self, *args, **kwargs):
-    #     self.coordinates = get_coordinates(self.address)
-    #     super().save(*args, **kwargs)

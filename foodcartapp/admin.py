@@ -1,19 +1,22 @@
 from django.contrib import admin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.shortcuts import redirect, reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme
 from star_burger.settings import ALLOWED_HOSTS
 
-from .models import (
-    Banner,
-    Order,
-    OrderItem,
-    Product,
-    ProductCategory,
-    Restaurant,
-    RestaurantMenuItem,
-)
+from .models import (Banner, Order, OrderItem, Product, ProductCategory,
+                     Restaurant, RestaurantMenuItem)
+from locationapp.models import Location
+
+
+@receiver(post_save, sender=Order)
+def location_handler(sender, **kwargs):
+    address = kwargs["instance"].address
+    coordinates = Location.get_coordinates(address)
+    Location.objects.get_or_create(address=address, coordinates=coordinates)
 
 
 class RestaurantMenuItemInline(admin.TabularInline):

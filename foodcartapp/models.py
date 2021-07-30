@@ -166,10 +166,6 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.firstname} {self.lastname} - {self.address}"
 
-    def save(self, *args, **kwargs):
-        Location.objects.get_or_create(address=self.address)
-        super().save(*args, **kwargs)
-
 
 def get_sentinel_product():
     return Product.objects.get_or_create(name="deleted")[0]

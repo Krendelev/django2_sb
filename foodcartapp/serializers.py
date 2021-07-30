@@ -1,6 +1,8 @@
+from requests.models import cookiejar_from_dict
 from rest_framework.serializers import ModelSerializer
 
 from .models import Order, OrderItem
+from locationapp.models import Location
 
 
 class OrderItemSerializer(ModelSerializer):
@@ -29,5 +31,10 @@ class OrderSerializer(ModelSerializer):
             for item in products
         ]
         OrderItem.objects.bulk_create(order_items)
+
+        coordinates = Location.get_coordinates(validated_data["address"])
+        Location.objects.get_or_create(
+            address=validated_data["address"], coordinates=coordinates
+        )
 
         return order
