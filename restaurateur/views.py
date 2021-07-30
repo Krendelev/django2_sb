@@ -1,4 +1,3 @@
-from ast import literal_eval
 from collections import defaultdict
 from operator import itemgetter
 
@@ -11,7 +10,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from foodcartapp.models import Order, Product, Restaurant, RestaurantMenuItem
 from locationapp.models import Location
-from geopy import distance
+from geopy import distance, point
 
 
 class Login(forms.Form):
@@ -111,6 +110,10 @@ def view_restaurants(request):
     )
 
 
+def get_point(coordinates):
+    return point.Point.from_string(coordinates)
+
+
 @user_passes_test(is_manager, login_url="restaurateur:login")
 def view_orders(request):
     orders = (
@@ -121,7 +124,7 @@ def view_orders(request):
     menu_items = RestaurantMenuItem.objects.filter(availability=True).select_related(
         "restaurant", "product"
     )
-    coordinates = Location.objects.values_list("coordinates", flat=True)
+    locations = Location.objects.values_list("coordinates", flat=True)
 
     products_in_restaurants = defaultdict(list)
     for item in menu_items:
@@ -132,15 +135,13 @@ def view_orders(request):
             set(products_in_restaurants[item.product])
             for item in order.order_items.all()
         ]
-        
+
         restaurants_with_distance = []
-        customer_coord = coordinates.get(address=order.address)
+        customer_location = get_point(locations.get(address=order.address))
 
         for restaurant in set.intersection(*restaurants):
-            restaurant_coord = coordinates.get(address=restaurant.address)
-            dist = distance.distance(
-                literal_eval(restaurant_coord), literal_eval(customer_coord)
-            ).km
+            restaurant_location = get_point(locations.get(address=restaurant.address))
+            dist = distance.distance(customer_location, restaurant_location).km
             restaurants_with_distance.append((restaurant.name, round(dist, 3)))
 
         order.available_in = sorted(restaurants_with_distance, key=itemgetter(1))

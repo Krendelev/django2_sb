@@ -179,7 +179,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(
         Product,
         blank=True,
-        related_name="product_orders",
+        related_name="order_items",
         verbose_name="продукт",
         on_delete=models.SET(get_sentinel_product),
     )
