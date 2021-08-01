@@ -7,3 +7,4 @@ geopy==2.2.*
 phonenumberslite==8.12.*
 Pillow==8.2.0
 requests==2.26.*
+rollbar==0.16.*

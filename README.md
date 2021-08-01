@@ -142,8 +142,9 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 
 - `DEBUG` — дебаг-режим. Поставьте `False`.
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте. Не стоит использовать значение по-умолчанию, **замените на своё**.
-- `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
+- `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
 - `GEOCODER_API_KEY` – API-ключ геокодера используемого для определения координат места (например [Яндекс](https://developer.tech.yandex.ru/services/)).
+ - `POST_SERVER_ITEM_ACCESS_TOKEN` – токен [Rollbar](https://rollbar.com), сервиса для отслеживания и сбора ошибок.
 
 ## Цели проекта
 

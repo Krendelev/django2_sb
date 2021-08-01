@@ -2,7 +2,6 @@ import os
 
 from environs import Env
 
-
 env = Env()
 env.read_env()
 
@@ -41,6 +40,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404",
 ]
 
 ROOT_URLCONF = "star_burger.urls"
@@ -127,3 +127,15 @@ STATICFILES_DIRS = [
 ]
 
 GEOCODER_API_KEY = env("GEOCODER_API_KEY", "get_your_own_API_key")
+
+POST_SERVER_ITEM_ACCESS_TOKEN = env("POST_SERVER_ITEM_ACCESS_TOKEN", "get_your_token")
+
+ROLLBAR = {
+    "access_token": POST_SERVER_ITEM_ACCESS_TOKEN,
+    "environment": "development" if DEBUG else "production",
+    "root": BASE_DIR,
+}
+
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "rollbar.contrib.django_rest_framework.post_exception_handler"
+}
