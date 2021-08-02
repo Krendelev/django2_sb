@@ -1,22 +1,13 @@
 from django.contrib import admin
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.shortcuts import redirect, reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme
+from locationapp.models import Location
 from star_burger.settings import ALLOWED_HOSTS
 
 from .models import (Banner, Order, OrderItem, Product, ProductCategory,
                      Restaurant, RestaurantMenuItem)
-from locationapp.models import Location
-
-
-@receiver(post_save, sender=Order)
-def location_handler(sender, **kwargs):
-    address = kwargs["instance"].address
-    coordinates = Location.get_coordinates(address)
-    Location.objects.get_or_create(address=address, coordinates=coordinates)
 
 
 class RestaurantMenuItemInline(admin.TabularInline):
@@ -31,69 +22,31 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Restaurant)
 class RestaurantAdmin(admin.ModelAdmin):
-    search_fields = [
-        "name",
-        "address",
-        "contact_phone",
-    ]
-    list_display = [
-        "name",
-        "address",
-        "contact_phone",
-    ]
+    search_fields = ["name", "address", "contact_phone"]
+    list_display = ["name", "address", "contact_phone"]
     inlines = [RestaurantMenuItemInline]
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = [
-        "get_image_list_preview",
-        "name",
-        "category",
-        "price",
-    ]
-    list_display_links = [
-        "name",
-    ]
-    list_filter = [
-        "category",
-    ]
-    search_fields = [
-        # FIXME SQLite can not convert letter case for cyrillic words properly, so search will be buggy.
-        # Migration to PostgreSQL is necessary
-        "name",
-        "category__name",
-    ]
+    list_display = ["get_image_list_preview", "name", "category", "price"]
+    list_display_links = ["name"]
+    list_filter = ["category"]
+    search_fields = ["name", "category__name"]
 
     inlines = [RestaurantMenuItemInline]
     fieldsets = (
         (
             "Общее",
-            {
-                "fields": [
-                    "name",
-                    "category",
-                    "image",
-                    "get_image_preview",
-                    "price",
-                ]
-            },
+            {"fields": ["name", "category", "image", "get_image_preview", "price"]},
         ),
         (
             "Подробно",
-            {
-                "fields": [
-                    "special_status",
-                    "description",
-                ],
-                "classes": ["wide"],
-            },
+            {"fields": ["special_status", "description"], "classes": ["wide"]},
         ),
     )
 
-    readonly_fields = [
-        "get_image_preview",
-    ]
+    readonly_fields = ["get_image_preview"]
 
     class Media:
         css = {"all": (static("admin/foodcartapp.css"))}
@@ -140,16 +93,8 @@ class OrderAdmin(admin.ModelAdmin):
         "comment",
         "restaurant",
     ]
-    search_fields = [
-        "lastname",
-        "address",
-        "phonenumber",
-    ]
-    list_display = [
-        "get_customer",
-        "address",
-        "phonenumber",
-    ]
+    search_fields = ["lastname", "address", "phonenumber"]
+    list_display = ["get_customer", "address", "phonenumber"]
     readonly_fields = ["received"]
     inlines = [OrderItemInline]
 
@@ -169,6 +114,12 @@ class OrderAdmin(admin.ModelAdmin):
             return redirect(redirect_to)
         else:
             return fallback
+
+    def save_model(self, request, obj, form, change):
+        address = obj.address
+        coordinates = Location.get_coordinates(address)
+        Location.objects.get_or_create(address=address, coordinates=coordinates)
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(Banner)

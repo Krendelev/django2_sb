@@ -2,6 +2,7 @@
 .gitignore
 test_*
 .DS_Store
+*.zip
 
 bundles/**
 node_modules/
