@@ -83,13 +83,21 @@ WSGI_APPLICATION = "star_burger.wsgi.application"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+DB_NAME = env("DB_NAME", "testdb")
+DB_USER = env("DB_USER", "testuser")
+DB_PASSWORD = env("DB_PASSWORD", "set_password")
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.getenv("DATABASE_NAME", os.path.join(BASE_DIR, "db.sqlite3")),
-        "ATOMIC_REQUESTS": True,
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": DB_NAME,
+        "USER": DB_USER,
+        "PASSWORD": DB_PASSWORD,
+        "HOST": "localhost",
+        "PORT": "",
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

@@ -86,7 +86,7 @@ npm --version
 # 6.14.5
 ```
 
-Версия `nodejs` должна быть не младше 10.0. Версия `npm` не важна. Как обновить Node.js читайте в статье: [How to Update Node.js](https://phoenixnap.com/kb/update-node-js-version).
+Версия `nodejs` должна быть не младше 12. Версия `npm` не важна. Как обновить Node.js читайте в статье: [How to Update Node.js](https://phoenixnap.com/kb/update-node-js-version).
 
 Установите необходимые пакеты. В каталоге проекта запустите:
 
@@ -143,6 +143,8 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `DEBUG` — дебаг-режим. Поставьте `False`.
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте. Не стоит использовать значение по-умолчанию, **замените на своё**.
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
+- `DB_NAME` – имя используемой базы данных.
+- `DB_USER`, `DB_PASSWORD` – логин и пароль к базе данных.
 - `GEOCODER_API_KEY` – API-ключ геокодера используемого для определения координат места (например [Яндекс](https://developer.tech.yandex.ru/services/)).
  - `POST_SERVER_ITEM_ACCESS_TOKEN` – токен [Rollbar](https://rollbar.com), сервиса для отслеживания и сбора ошибок.
 
