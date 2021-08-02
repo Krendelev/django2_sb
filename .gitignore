@@ -1,5 +1,4 @@
 .vscode/
-.gitignore
 test_*
 .DS_Store
 *.zip
@@ -7,6 +6,7 @@ test_*
 bundles/**
 node_modules/
 media/
+staticfiles/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
