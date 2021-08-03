@@ -86,7 +86,7 @@ npm --version
 # 6.14.5
 ```
 
-Версия `nodejs` должна быть не младше 12. Версия `npm` не важна. Как обновить Node.js читайте в статье: [How to Update Node.js](https://phoenixnap.com/kb/update-node-js-version).
+Версия `nodejs` должна быть не ниже 12. Версия `npm` не важна. Как обновить Node.js читайте в статье: [How to Update Node.js](https://phoenixnap.com/kb/update-node-js-version).
 
 Установите необходимые пакеты. В каталоге проекта запустите:
 
@@ -147,6 +147,11 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `DB_USER`, `DB_PASSWORD` – логин и пароль к базе данных.
 - `GEOCODER_API_KEY` – API-ключ геокодера используемого для определения координат места (например [Яндекс](https://developer.tech.yandex.ru/services/)).
  - `POST_SERVER_ITEM_ACCESS_TOKEN` – токен [Rollbar](https://rollbar.com), сервиса для отслеживания и сбора ошибок.
+
+При внесении изменений в проект используйте скрипт `deploy.sh` на продакшен-сервере. Он скачает обновленный репозиторий, установит необходимые библиотеки, выполнит миграцию базы данных и сбор статики и перезапустит сервис.
+```sh
+./deploy.sh # понадобятся права администратора `sudo`
+```
 
 ## Цели проекта
 
