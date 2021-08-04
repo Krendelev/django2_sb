@@ -153,6 +153,11 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 ./deploy.sh # понадобятся права администратора `sudo`
 ```
 
+## Тестовый сервер
+
+Тестовый сервер находится по адресу `krendelev.xyz`, IP – `161.35.18.15`, пользователь – `gk`.
+
+
 ## Цели проекта
 
 Код написан в учебных целях — это урок в курсе по Python и веб-разработке на сайте [Devman](https://dvmn.org). За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
