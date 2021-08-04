@@ -17,9 +17,9 @@ then
 fi
 
 git pull --rebase
-sudo npm install --dev
-sudo npm install -g parcel@latest
-parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
+# sudo npm install --dev
+# sudo npm install -g parcel@latest
+# parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 source venv/bin/activate
 pip install -r requirements.txt
 ./manage.py collectstatic
@@ -31,6 +31,6 @@ curl -X POST https://api.rollbar.com/api/1/deploy \
                 -H "X-ROLLBAR-ACCESS-TOKEN: $ROLLBAR_ACCESS_TOKEN" \
                 --form environment="production" \
                 --form revision=$REMOTE \
-                --form local_username=$USER)
+                --form local_username=$USER
 
 echo -e "\n\033[32mSuccess! Let's cook some burgers.\033[0m\n"

@@ -83,9 +83,9 @@ WSGI_APPLICATION = "star_burger.wsgi.application"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-DB_NAME = env("DB_NAME", "testdb")
-DB_USER = env("DB_USER", "testuser")
-DB_PASSWORD = env("DB_PASSWORD", "set_password")
+DB_NAME = env("DB_NAME")
+DB_USER = env("DB_USER")
+DB_PASSWORD = env("DB_PASSWORD")
 
 DATABASES = {
     "default": {
