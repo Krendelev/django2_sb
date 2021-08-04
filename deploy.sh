@@ -25,4 +25,12 @@ pip install -r requirements.txt
 ./manage.py collectstatic
 ./manage.py migrate
 sudo systemctl restart starburger.service
+
+export $(cat .env)
+curl -X POST https://api.rollbar.com/api/1/deploy \
+                -H "X-ROLLBAR-ACCESS-TOKEN: $ROLLBAR_ACCESS_TOKEN" \
+                --form environment="production" \
+                --form revision=$REMOTE \
+                --form local_username=$USER)
+
 echo -e "\n\033[32mSuccess! Let's cook some burgers.\033[0m\n"
