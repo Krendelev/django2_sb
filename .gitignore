@@ -1,4 +1,5 @@
 .vscode/
+_workfiles/
 test_*
 .DS_Store
 *.zip
