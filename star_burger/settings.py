@@ -12,7 +12,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 SECRET_KEY = env("SECRET_KEY", "etirgvonenrfnoerngorenogneongg334g")
 DEBUG = env.bool("DEBUG", True)
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ["127.0.0.1", "localhost"])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ["127.0.0.1", "localhost", "krendelev.xyz"])
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -83,18 +83,11 @@ WSGI_APPLICATION = "star_burger.wsgi.application"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-DB_NAME = env("DB_NAME")
-DB_USER = env("DB_USER")
-DB_PASSWORD = env("DB_PASSWORD")
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": DB_NAME,
-        "USER": DB_USER,
-        "PASSWORD": DB_PASSWORD,
-        "HOST": "localhost",
-        "PORT": "",
+	**env.dj_db_url("DATABASE_URL")
     }
 }
 
@@ -134,13 +127,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "bundles"),
 ]
 
-GEOCODER_API_KEY = env("GEOCODER_API_KEY", "get_your_own_API_key")
+GEOCODER_API_KEY = env("GEOCODER_API_KEY")
 
-POST_SERVER_ITEM_ACCESS_TOKEN = env("POST_SERVER_ITEM_ACCESS_TOKEN", "get_your_token")
+POST_SERVER_ITEM_ACCESS_TOKEN = env("POST_SERVER_ITEM_ACCESS_TOKEN")
 
 ROLLBAR = {
     "access_token": POST_SERVER_ITEM_ACCESS_TOKEN,
-    "environment": "development" if DEBUG else "production",
+    "environment": env("ROLLBAR_ENVIRONMENT"),
     "root": BASE_DIR,
 }
 
