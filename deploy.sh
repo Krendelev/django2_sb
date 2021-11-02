@@ -22,7 +22,7 @@ sudo npm install -g parcel@latest
 parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 source venv/bin/activate
 pip install -r requirements.txt
-./manage.py collectstatic
+./manage.py collectstatic --noinput
 ./manage.py migrate
 sudo systemctl restart starburger.service
 
